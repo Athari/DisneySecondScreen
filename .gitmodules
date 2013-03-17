@@ -1,0 +1,3 @@
+[submodule "Alba.PList"]
+	path = Alba.PList
+	url = git@github.com:Athari/Alba.Plist.git
