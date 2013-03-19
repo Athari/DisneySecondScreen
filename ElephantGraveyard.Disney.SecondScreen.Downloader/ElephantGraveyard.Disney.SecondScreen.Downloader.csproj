@@ -42,6 +42,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="Library\Events\EventTypes.cs" />
     <Compile Include="Shell\Config\ConfigBase.cs" />
     <Compile Include="Program.cs" />
@@ -57,6 +58,10 @@
     <ProjectReference Include="..\Alba.Framework\Alba.Framework\Alba.Framework.csproj">
       <Project>{62730B23-450C-4B93-8D5C-F7037DB6D263}</Project>
       <Name>Alba.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Alba.PList\Alba.Plist\Alba.Plist.csproj">
+      <Project>{02140CA1-6B32-4F0A-8B38-5D522E4266D0}</Project>
+      <Name>Alba.Plist</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\Build\Common.targets" Condition="Exists('$(SolutionDir)\Build\Common.targets')" />

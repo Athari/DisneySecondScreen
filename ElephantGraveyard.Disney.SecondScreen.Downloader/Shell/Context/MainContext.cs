@@ -1,12 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Alba.Plist;
+using ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Events;
 using ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Config;
+using System.Linq;
+using PlistConfig = System.Collections.Generic.IDictionary<string, object>;
 
 // TODO Search for ".mxcsi", ".plist", ".png" etc. (regex?)
+// ReSharper disable LoopCanBeConvertedToQuery
 namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Context
 {
     internal abstract class MainContext
     {
+        private readonly Lazy<PlistConfig> _eventListConfig;
+
         public ConfigBase Config { get; protected set; }
+
+        protected MainContext ()
+        {
+            _eventListConfig = new Lazy<PlistConfig>(() => (PlistConfig)Plist.ReadFile(Constants.DataBaseDir + EventListConfigFile));
+        }
+
+        //
+        // Views
+        //
+
+        // Original: com\mx_production\second_screen\shell\view\components\StartupView.as
+        public virtual IEnumerable<string> GetStartupFiles ()
+        {
+            string dir = Config.StartupImageBase;
+            yield return dir + "Default-Landscape.jpg";
+            yield return dir + "second_splash_landscape.jpg";
+            yield return dir + "intro_bk.jpg";
+        }
+
+        //
+        // Models
+        //
 
         // Original: com\mx_production\second_screen\shell\model\MainModel.as
         // Contains control paths.
@@ -37,8 +67,7 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Context
         // Contains events parsing.
         public virtual IEnumerable<string> GetEventListModelResourceFiles ()
         {
-            string dir = Config.ResourcesAssetBase;
-            yield return dir + "EventList.plist";
+            yield return EventListConfigFile;
         }
 
         public virtual IEnumerable<string> GetEventListModelIconFiles ()
@@ -48,6 +77,16 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Context
                 yield return dir + string.Format("{0}_icon.png", i);
             foreach (string typeIcon in TypeIcons)
                 yield return dir + string.Format("{0}_icon.png", typeIcon);
+        }
+
+        public virtual string EventListConfigFile
+        {
+            get { return Config.ResourcesAssetBase + "EventList.plist"; }
+        }
+
+        public PlistConfig EventListConfig
+        {
+            get { return _eventListConfig.Value; }
         }
 
         public abstract int CountIcons { get; }
@@ -159,6 +198,75 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Context
         {
             string dir = Config.SocialBase;
             yield return dir + "awards.plist";
+        }
+
+        //
+        // Modules
+        //
+
+        // Original: com\mx_production\cub_second_screen\shell\view\components\EventModule.as
+        // Contains assets config for modules.
+        public virtual IEnumerable<string> GetEventModuleFlashFiles ()
+        {
+            string dir = Config.ModuleBase;
+            foreach (EventTypes value in AvailableEventTypes)
+                yield return dir + string.Format("{0}.swf", value);
+        }
+
+        public virtual IEnumerable<EventTypes> AvailableEventTypes
+        {
+            get { return Enum.GetValues(typeof(EventTypes)).Cast<EventTypes>(); }
+        }
+
+        // Original: com\mx_production\second_screen\modules\deleted_scene\config\Config.as
+        public virtual IEnumerable<string> GetDeletedSceneModuleInterfaceFiles ()
+        {
+            string dir = Config.InterfaceAssetBase;
+            yield return dir + "IS_1530_deleted_scene_segment.mxcsi";
+        }
+
+        // Original: com\mx_production\second_screen\modules\flipbook\config\Config.as
+        public virtual IEnumerable<string> GetFlipbookModuleInterfaceFiles ()
+        {
+            string dir = Config.InterfaceAssetBase;
+            yield return dir + "IS_1310_flipbook_start_segment.mxcsi";
+        }
+
+        // Original: com\mx_production\second_screen\modules\gallery\config\Config.as
+        public virtual IEnumerable<string> GetGalleryModuleInterfaceFiles ()
+        {
+            string dir = Config.InterfaceAssetBase;
+            yield return dir + "IS_1020_gallery.mxcsi";
+        }
+
+        // Original: com\mx_production\second_screen\modules\ink_and_paint\config\Config.as
+        public virtual IEnumerable<string> GetInkAndPaintModuleInterfaceFiles ()
+        {
+            string dir = Config.InterfaceAssetBase;
+            yield return dir + "IS_1700_inkpaint_start_segment.mxcsi";
+        }
+
+        // Original: com\mx_production\second_screen\modules\scene_scrambler\config\Config.as
+        public virtual IEnumerable<string> GetSceneScramblerModuleInterfaceFiles ()
+        {
+            string dir = Config.InterfaceAssetBase;
+            yield return dir + "IS_1360_scenescrambler_start_segment.mxcsi";
+        }
+
+        // Original: com\mx_production\second_screen\modules\trivia\config\Config.as
+        public virtual IEnumerable<string> GetTriviaModuleInterfaceFiles ()
+        {
+            string dir = Config.InterfaceAssetBase;
+            yield return dir + "IS_1005_trivia_segment.mxcsi";
+        }
+
+        // Original: com\mx_production\second_screen\modules\video\config\Config.as
+        // Contains coords and colors of controls.
+        public virtual IEnumerable<string> GetVideoModuleInterfaceFiles ()
+        {
+            string dir = Config.InterfaceAssetBase;
+            yield return dir + "IS_1425_video_segment.mxcsi";
+            yield return dir + "modules/video/video_segment.xml";
         }
     }
 }

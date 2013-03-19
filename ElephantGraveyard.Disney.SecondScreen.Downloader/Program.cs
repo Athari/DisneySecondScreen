@@ -15,7 +15,6 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
 {
     internal class Program
     {
-        private const string DataBaseDir = "data/";
         private const int DownloadSuccessDelay = 200;
         private const int DownloadErrorDelay = 1000;
 
@@ -43,7 +42,8 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
             Log("Started on {0}", DateTime.Now);
             Log(new string('=', 80));
             try {
-                DownloadMainFiles();
+                DownloadMainData();
+                DownloadEventData();
                 DownloadInterfaceAssets();
                 Log();
                 Log("DONE!");
@@ -58,36 +58,96 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
             }
         }
 
-        private void DownloadMainFiles ()
+        private void DownloadMainData ()
         {
             Log();
-            Log("I. Downloading main files");
+            Log("* Downloading main data");
             Log();
             var files = _context.GetAlertModelInterfaceFiles()
                 .Concat(_context.GetAwardModelInterfaceFiles())
                 .Concat(_context.GetAwardModelResourceFiles())
                 .Concat(_context.GetCaptionModelResourceFiles())
+                .Concat(_context.GetDeletedSceneModuleInterfaceFiles())
                 .Concat(_context.GetEventListModelIconFiles())
                 .Concat(_context.GetEventListModelResourceFiles())
+                .Concat(_context.GetEventModuleFlashFiles())
+                .Concat(_context.GetFlipbookModuleInterfaceFiles())
+                .Concat(_context.GetGalleryModuleInterfaceFiles())
                 .Concat(_context.GetIndexModelInterfaceFiles())
+                .Concat(_context.GetInkAndPaintModuleInterfaceFiles())
                 .Concat(_context.GetMainModelInterfaceFiles())
+                .Concat(_context.GetSceneScramblerModuleInterfaceFiles())
                 .Concat(_context.GetSocialModelInterfaceFiles())
                 .Concat(_context.GetSocialStringsModelTextFiles())
+                .Concat(_context.GetStartupFiles())
                 .Concat(_context.GetSyncModelInterfaceFiles())
                 .Concat(_context.GetTimelineModelInterfaceFiles())
-                .Concat(_context.GetUiInformationModelResourceFiles());
+                .Concat(_context.GetTriviaModuleInterfaceFiles())
+                .Concat(_context.GetUiInformationModelResourceFiles())
+                .Concat(_context.GetVideoModuleInterfaceFiles());
             Download(files);
             Log();
-            Log("I. Downloading main files - DONE");
+            Log("* Downloading main data - DONE");
+        }
+
+        private void DownloadEventData ()
+        {
+            Log();
+            Log("* Downloading event interfaces");
+            Log();
+            string dir = _context.Config.SecondScreenAssetBase;
+            var files = new List<string>();
+            dynamic eventListConfig = _context.EventListConfig;
+            foreach (dynamic evt in eventListConfig["events"]) {
+                files.Add(dir + (string)evt["interfaceFile"] + ".mxcsi");
+                // deleted:
+                //   *_deleted_scene_segment
+                //   *_deleted_scene_storyboard_segment
+                // flipbook:
+                //   *_flipbook
+                //   *_FB_*.swf (?) - FlipbookView
+                // gallery:
+                //   galleryInfoButtons:
+                //     *..._info_segment
+                // inkandpaint:
+                //   *_inkpaint_start_segment
+                //   *_inkpaint_segment
+                //   *_ink_segment
+                //   *_paint_segment
+                //   inkpaint_save_fullsegment
+                //   inkpaint_saveover_fullsegment
+                //   inkpaint_load_fullsegment
+                // scenescrambler:
+                //   *_scenescrambler_segment
+                //   well_done_segment
+                // trivia:
+                //   -
+                // video:
+                //   *_video_segment
+                //   *_video_start_segment (HasSeparateStartSegment=false?)
+                //   *.mov
+            }
+            Download(files);
+            Log();
+            Log("* Downloading event interfaces - DONE");
         }
 
         private void DownloadInterfaceAssets ()
         {
             Log();
-            Log("II. Downloading interface assets");
+            Log("* Downloading interface assets");
             Log();
+            /*var processedFiles = new List<string>();
+            while (true) {
+                var files = Directory.EnumerateFiles(DataBaseDir, "*.mxcsi", SearchOption.AllDirectories).Except(processedFiles).ToList();
+                if (!files.Any())
+                    break;
+                foreach (string file in files)
+                    DownloadInterfaceFileAssets(file);
+                processedFiles.AddRange(files);
+            }*/
             Log();
-            Log("II. Downloading interface assets - DONE");
+            Log("* Downloading interface assets - DONE");
         }
 
         private void Download (IEnumerable<string> files)
@@ -102,14 +162,14 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
         private void Download (string file)
         {
             string url = _context.Config.ApplicationUrl + file;
-            string path = DataBaseDir + file;
+            string path = Constants.DataBaseDir + file;
 
             if (File.Exists(path)) {
-                Log("  Skipping {0}", url);
+                Log("  Skipping {0}", file);
             }
             else {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
-                Log("  Downloading {0}\n           to {1}", url, path);
+                Log("  Downloading {0}", file);
                 try {
                     _web.DownloadFile(url, path);
                     Thread.Sleep(DownloadSuccessDelay);

@@ -29,6 +29,11 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Config
             get { return "assets/"; }
         }
 
+        public virtual string ModuleBase
+        {
+            get { return "modules/"; }
+        }
+
         public virtual string StartupImageBase
         {
             get { return AssetBase + "startup/"; }
@@ -57,6 +62,11 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Config
         public virtual string SocialBase
         {
             get { return AssetBase + "social/"; }
+        }
+
+        public virtual string FlipbookBase
+        {
+            get { return AssetBase + "flipbooks/"; }
         }
     }
 }
