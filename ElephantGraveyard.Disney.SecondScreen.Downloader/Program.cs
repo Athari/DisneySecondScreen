@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading;
 using Alba.Framework.Attributes;
 using Alba.Framework.IO;
+using ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Events;
 using ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Context;
 using System.Linq;
 using Alba.Framework.Sys;
@@ -23,6 +24,7 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
         private readonly Stream _logStream;
         private readonly TextWriter _logWriter;
         private MainContext _context;
+        private int _successfulDownloadsNum;
 
         public Program ()
         {
@@ -55,6 +57,8 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
                 }
 
                 Log();
+                Log("Successfully downloaded {0} file(s)", _successfulDownloadsNum);
+                Log();
                 Log("DONE!");
             }
             catch (Exception e) {
@@ -80,7 +84,9 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
                 .Concat(_context.GetEventListModelResourceFiles())
                 .Concat(_context.GetEventModuleFlashFiles())
                 .Concat(_context.GetIndexModelInterfaceFiles())
+                .Concat(_context.GetInkAndPaintModelInterfaceFiles())
                 .Concat(_context.GetMainModelInterfaceFiles())
+                .Concat(_context.GetSceneScramblerModelInterfaceFiles())
                 .Concat(_context.GetSocialModelInterfaceFiles())
                 .Concat(_context.GetSocialStringsModelTextFiles())
                 .Concat(_context.GetStartupFiles())
@@ -98,38 +104,56 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
             Log();
             Log("* Downloading event interfaces");
             Log();
-            string dir = _context.Config.SecondScreenAssetBase;
+            string dirSS = _context.Config.SecondScreenAssetBase;
+            string dirVid = _context.Config.VideoBase;
             var files = new List<string>();
             dynamic eventListConfig = _context.EventListConfig;
             foreach (dynamic evt in eventListConfig["events"]) {
-                files.Add(dir + (string)evt["interfaceFile"] + ".mxcsi");
-                files.Add(dir + (string)evt["thumb"]);
-                // deleted:
-                //   *_deleted_scene_segment
-                //   *_deleted_scene_storyboard_segment
+                files.Add(dirSS + (string)evt["interfaceFile"] + ".mxcsi");
+                files.Add(dirSS + (string)evt["thumb"]);
+                var eventId = (string)evt["eventID"];
+                switch ((EventTypes)Enum.Parse(typeof(EventTypes), (string)evt["type"])) {
+                    case EventTypes.Gallery:
+                        break;
+                    case EventTypes.Trivia:
+                        break;
+                    case EventTypes.Generic:
+                        break;
+                    case EventTypes.Video:
+                        files.Add(dirVid + eventId + ".mov");
+                        files.Add(dirSS + eventId + "_video_segment.mxcsi");
+                        //files.Add(dirSS + eventId + "_video_start_segment.mxcsi"); // HasSeparateStartSegment is always false
+                        break;
+                    case EventTypes.DeletedScene:
+                        files.Add(dirSS + eventId + "_deleted_scene_segment.mxcsi");
+                        files.Add(dirSS + eventId + "_deleted_scene_storyboard_segment.mxcsi");
+                        break;
+                    case EventTypes.Flipbook:
+                        files.Add(dirSS + eventId + "_flipbook.mxcsi");
+                        break;
+                    case EventTypes.SceneScrambler:
+                        files.Add(dirSS + eventId + "_scenescrambler_segment.mxcsi");
+                        break;
+                    case EventTypes.WhatsDifferent:
+                        break;
+                    case EventTypes.InkAndPaint:
+                        files.Add(dirSS + eventId + "_inkpaint_start_segment.mxcsi");
+                        files.Add(dirSS + eventId + "_inkpaint_segment.mxcsi");
+                        files.Add(dirSS + eventId + "_ink_segment.mxcsi");
+                        files.Add(dirSS + eventId + "_paint_segment.mxcsi");
+                        break;
+                    case EventTypes.FlipbookType2:
+                        break;
+                    case EventTypes.Application:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
                 // flipbook:
-                //   *_flipbook
                 //   *_FB_*.swf (?) - FlipbookView
                 // gallery:
                 //   galleryInfoButtons:
                 //     *..._info_segment
-                // inkandpaint:
-                //   *_inkpaint_start_segment
-                //   *_inkpaint_segment
-                //   *_ink_segment
-                //   *_paint_segment
-                //   inkpaint_save_fullsegment
-                //   inkpaint_saveover_fullsegment
-                //   inkpaint_load_fullsegment
-                // scenescrambler:
-                //   *_scenescrambler_segment
-                //   well_done_segment
-                // trivia:
-                //   -
-                // video:
-                //   *_video_segment
-                //   *_video_start_segment (HasSeparateStartSegment=false?)
-                //   *.mov
             }
             Download(files);
             Log();
@@ -176,6 +200,7 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
                 Log("  Downloading {0}", file);
                 try {
                     _web.DownloadFile(url, path);
+                    _successfulDownloadsNum++;
                     Thread.Sleep(DownloadSuccessDelay);
                 }
                 catch (WebException e) {

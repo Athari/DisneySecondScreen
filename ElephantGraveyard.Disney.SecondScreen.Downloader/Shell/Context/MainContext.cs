@@ -201,6 +201,22 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Context
             yield return dir + "awards.plist";
         }
 
+        // Original: com\mx_production\second_screen\modules\ink_and_paint\model\InkAndPaintModel.as
+        public virtual IEnumerable<string> GetInkAndPaintModelInterfaceFiles ()
+        {
+            string dir = Config.SecondScreenAssetBase;
+            yield return dir + "inkpaint_save_fullsegment.mxcsi";
+            yield return dir + "inkpaint_saveover_fullsegment.mxcsi";
+            yield return dir + "inkpaint_load_fullsegment.mxcsi";
+        }
+
+        // Original: com\mx_production\second_screen\modules\scene_scrambler\model\SceneScramblerModel.as
+        public virtual IEnumerable<string> GetSceneScramblerModelInterfaceFiles ()
+        {
+            string dir = Config.SecondScreenAssetBase;
+            yield return dir + "well_done_segment.mxcsi";
+        }
+
         //
         // Modules
         //
