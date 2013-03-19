@@ -103,6 +103,7 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
             dynamic eventListConfig = _context.EventListConfig;
             foreach (dynamic evt in eventListConfig["events"]) {
                 files.Add(dir + (string)evt["interfaceFile"] + ".mxcsi");
+                files.Add(dir + (string)evt["thumb"]);
                 // deleted:
                 //   *_deleted_scene_segment
                 //   *_deleted_scene_storyboard_segment
