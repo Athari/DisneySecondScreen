@@ -1,3 +1,6 @@
 [submodule "Alba.PList"]
 	path = Alba.PList
 	url = git@github.com:Athari/Alba.Plist.git
+[submodule "Alba.Framework"]
+	path = Alba.Framework
+	url = git@github.com:Athari/Alba.Framework.git
