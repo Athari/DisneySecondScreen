@@ -19,6 +19,7 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
         private const int DownloadErrorDelay = 1000;
 
         private readonly WebClient _web = new WebClient();
+        private readonly List<string> _failedDownloads = new List<string>();
         private readonly Stream _logStream;
         private readonly TextWriter _logWriter;
         private MainContext _context;
@@ -45,6 +46,14 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
                 DownloadMainData();
                 DownloadEventData();
                 DownloadInterfaceAssets();
+
+                if (_failedDownloads.Any()) {
+                    Log();
+                    Log("Failed downloads:");
+                    foreach (string failedDownload in _failedDownloads)
+                        Log("  - {0}", failedDownload);
+                }
+
                 Log();
                 Log("DONE!");
             }
@@ -67,24 +76,18 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
                 .Concat(_context.GetAwardModelInterfaceFiles())
                 .Concat(_context.GetAwardModelResourceFiles())
                 .Concat(_context.GetCaptionModelResourceFiles())
-                .Concat(_context.GetDeletedSceneModuleInterfaceFiles())
                 .Concat(_context.GetEventListModelIconFiles())
                 .Concat(_context.GetEventListModelResourceFiles())
                 .Concat(_context.GetEventModuleFlashFiles())
-                .Concat(_context.GetFlipbookModuleInterfaceFiles())
-                .Concat(_context.GetGalleryModuleInterfaceFiles())
                 .Concat(_context.GetIndexModelInterfaceFiles())
-                .Concat(_context.GetInkAndPaintModuleInterfaceFiles())
                 .Concat(_context.GetMainModelInterfaceFiles())
-                .Concat(_context.GetSceneScramblerModuleInterfaceFiles())
                 .Concat(_context.GetSocialModelInterfaceFiles())
                 .Concat(_context.GetSocialStringsModelTextFiles())
                 .Concat(_context.GetStartupFiles())
                 .Concat(_context.GetSyncModelInterfaceFiles())
                 .Concat(_context.GetTimelineModelInterfaceFiles())
-                .Concat(_context.GetTriviaModuleInterfaceFiles())
                 .Concat(_context.GetUiInformationModelResourceFiles())
-                .Concat(_context.GetVideoModuleInterfaceFiles());
+                .Concat(_context.GetVideoModuleResourceFiles());
             Download(files);
             Log();
             Log("* Downloading main data - DONE");
@@ -176,6 +179,7 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
                 }
                 catch (WebException e) {
                     Log("  Download failed: {0}", e.GetFullMessage());
+                    _failedDownloads.Add(file);
                     Thread.Sleep(DownloadErrorDelay);
                 }
             }

@@ -31,6 +31,7 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Context
             string dir = Config.StartupImageBase;
             yield return dir + "Default-Landscape.jpg";
             yield return dir + "second_splash_landscape.jpg";
+            dir = Config.SecondScreenAssetBase;
             yield return dir + "intro_bk.jpg";
         }
 
@@ -218,54 +219,11 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Context
             get { return Enum.GetValues(typeof(EventTypes)).Cast<EventTypes>(); }
         }
 
-        // Original: com\mx_production\second_screen\modules\deleted_scene\config\Config.as
-        public virtual IEnumerable<string> GetDeletedSceneModuleInterfaceFiles ()
-        {
-            string dir = Config.InterfaceAssetBase;
-            yield return dir + "IS_1530_deleted_scene_segment.mxcsi";
-        }
-
-        // Original: com\mx_production\second_screen\modules\flipbook\config\Config.as
-        public virtual IEnumerable<string> GetFlipbookModuleInterfaceFiles ()
-        {
-            string dir = Config.InterfaceAssetBase;
-            yield return dir + "IS_1310_flipbook_start_segment.mxcsi";
-        }
-
-        // Original: com\mx_production\second_screen\modules\gallery\config\Config.as
-        public virtual IEnumerable<string> GetGalleryModuleInterfaceFiles ()
-        {
-            string dir = Config.InterfaceAssetBase;
-            yield return dir + "IS_1020_gallery.mxcsi";
-        }
-
-        // Original: com\mx_production\second_screen\modules\ink_and_paint\config\Config.as
-        public virtual IEnumerable<string> GetInkAndPaintModuleInterfaceFiles ()
-        {
-            string dir = Config.InterfaceAssetBase;
-            yield return dir + "IS_1700_inkpaint_start_segment.mxcsi";
-        }
-
-        // Original: com\mx_production\second_screen\modules\scene_scrambler\config\Config.as
-        public virtual IEnumerable<string> GetSceneScramblerModuleInterfaceFiles ()
-        {
-            string dir = Config.InterfaceAssetBase;
-            yield return dir + "IS_1360_scenescrambler_start_segment.mxcsi";
-        }
-
-        // Original: com\mx_production\second_screen\modules\trivia\config\Config.as
-        public virtual IEnumerable<string> GetTriviaModuleInterfaceFiles ()
-        {
-            string dir = Config.InterfaceAssetBase;
-            yield return dir + "IS_1005_trivia_segment.mxcsi";
-        }
-
         // Original: com\mx_production\second_screen\modules\video\config\Config.as
         // Contains coords and colors of controls.
-        public virtual IEnumerable<string> GetVideoModuleInterfaceFiles ()
+        public virtual IEnumerable<string> GetVideoModuleResourceFiles ()
         {
             string dir = Config.InterfaceAssetBase;
-            yield return dir + "IS_1425_video_segment.mxcsi";
             yield return dir + "modules/video/video_segment.xml";
         }
     }
