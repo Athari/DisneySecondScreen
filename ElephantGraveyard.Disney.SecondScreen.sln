@@ -20,6 +20,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alba.Framework", "Alba.Fram
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alba.Plist", "Alba.PList\Alba.Plist\Alba.Plist.csproj", "{02140CA1-6B32-4F0A-8B38-5D522E4266D0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{B95DC813-001B-4915-B672-E90EF5D4E7F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Newtonsoft.Json", "Newtonsoft.Json", "{3567FD24-9C4A-437D-B648-33A6BF06F2A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newtonsoft.Json.Net40", "Libs\Newtonsoft.Json\Src\Newtonsoft.Json\Newtonsoft.Json.Net40.csproj", "{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,8 +44,16 @@ Global
 		{02140CA1-6B32-4F0A-8B38-5D522E4266D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02140CA1-6B32-4F0A-8B38-5D522E4266D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02140CA1-6B32-4F0A-8B38-5D522E4266D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3567FD24-9C4A-437D-B648-33A6BF06F2A5} = {B95DC813-001B-4915-B672-E90EF5D4E7F5}
+		{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D} = {3567FD24-9C4A-437D-B648-33A6BF06F2A5}
 	EndGlobalSection
 EndGlobal

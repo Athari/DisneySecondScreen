@@ -4,3 +4,6 @@
 [submodule "Alba.Framework"]
 	path = Alba.Framework
 	url = git@github.com:Athari/Alba.Framework.git
+[submodule "Libs/Newtonsoft.Json"]
+	path = Libs/Newtonsoft.Json
+	url = git@github.com:Athari/Newtonsoft.Json.git
