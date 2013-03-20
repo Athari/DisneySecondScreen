@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 
 namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Config
 {

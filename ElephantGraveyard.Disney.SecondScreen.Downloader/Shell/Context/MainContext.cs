@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Alba.Plist;
 using ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Events;
 using ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Config;
-using System.Linq;
 using PlistConfig = System.Collections.Generic.IDictionary<string, object>;
 
 // TODO Search for ".mxcsi", ".plist", ".png" etc. (regex?)

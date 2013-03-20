@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using Alba.Framework.Attributes;
 using Alba.Framework.IO;
+using Alba.Framework.Sys;
 using ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Events;
 using ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Parser;
 using ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Ui;
 using ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Context;
-using System.Linq;
-using Alba.Framework.Sys;
 
 // ReSharper disable AssignNullToNotNullAttribute
 // ReSharper disable MethodOverloadWithOptionalParameter
