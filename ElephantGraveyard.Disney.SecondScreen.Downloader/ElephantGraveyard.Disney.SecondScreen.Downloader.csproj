@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Library\Events\EventTypes.cs" />
+    <Compile Include="Library\Parser\MxCsiParser.cs" />
+    <Compile Include="Library\Ui\MxUi.cs" />
     <Compile Include="Shell\Config\ConfigBase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

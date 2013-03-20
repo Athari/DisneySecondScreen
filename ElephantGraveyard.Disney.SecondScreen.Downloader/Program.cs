@@ -39,12 +39,20 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
 
         private void MainInternal (string[] args)
         {
-            _context = new MainContext_TheLionKing();
-
-            Log(new string('=', 80));
-            Log("Started on {0}", DateTime.Now);
-            Log(new string('=', 80));
             try {
+                string contextType = args.Length > 0 ? args[0] : "TheLionKing";
+                switch (contextType) {
+                    case "TheLionKing":
+                        _context = new MainContext_TheLionKing();
+                        break;
+                    default:
+                        throw new InvalidOperationException("Unsupported context type.");
+                }
+
+                Log(new string('=', 80));
+                Log("Started on {0}", DateTime.Now);
+                Log(new string('=', 80));
+
                 DownloadMainData();
                 DownloadEventData();
                 DownloadInterfaceAssets();
