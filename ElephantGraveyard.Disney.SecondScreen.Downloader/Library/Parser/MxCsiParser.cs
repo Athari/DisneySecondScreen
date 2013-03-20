@@ -13,6 +13,13 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Parser
     {
         public static List<string> LayerTypeNames = new List<string> { "LayerType_Layer", "LayerType_Group", "LayerType_ButtonGroup", "LayerType_SegmentGroup", "LayerType_CommonGroup", "LayerType_Link", "LayerType_ButtonImage", "LayerType_ButtonOverlay", "LayerType_View", "LayerType_Tiled", "LayerType_ZoomingSegmentGroup", "LayerType_ScrollingView", "LayerType_VideoLayer", "LayerType_GalleryGroup", "LayerType_GallerySegment", "LayerType_Flipbook", "LayerType_SliderGroup", "LayerType_SliderThumbImage", "LayerType_SliderTrackImage" };
 
+        public static MXUIView parse (string filename)
+        {
+            using (var stream = File.OpenRead(filename))
+            using (var reader = new BinaryReader(stream))
+                return parse(reader);
+        }
+
         public static MXUIView parse (BinaryReader reader)
         {
             MXUIView view = null;

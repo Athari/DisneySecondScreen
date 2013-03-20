@@ -35,10 +35,10 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Ui
     [DebuggerDisplay (@"subviews = \{Count = {subviews.Count}\}, layers = \{Count = {layers.Count}\}, buttons = \{Count = {buttons.Count}\}, sliders = \{Count = {sliders.Count}\}")]
     public class MXUIView : MXUIBase
     {
-        public List<object> subviews = new List<object>();
-        public List<object> layers = new List<object>();
-        public List<object> buttons = new List<object>();
-        public List<object> sliders = new List<object>();
+        public List<MXUIView> subviews = new List<MXUIView>();
+        public List<MXUILayer> layers = new List<MXUILayer>();
+        public List<MXUIButton> buttons = new List<MXUIButton>();
+        public List<MXUISlider> sliders = new List<MXUISlider>();
 
         public void insertSubview (MXUIView view)
         {
@@ -87,6 +87,14 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Ui
         public Dictionary<IMAGE_STATE, MXUIImage> imageStates = new Dictionary<IMAGE_STATE, MXUIImage>();
     }
 
+    [DebuggerDisplay (@"thumbStates = \{Count = {thumbStates.Count}\}, trackStates = \{Count = {trackStates.Count}\}")]
+    public class MXUISlider : MXUIBase
+    {
+        public Rect trackRect;
+        public Dictionary<int, MXUIImage> thumbStates = new Dictionary<int, MXUIImage>();
+        public Dictionary<int, MXUIImage> trackStates = new Dictionary<int, MXUIImage>();
+    }
+
     public class MXUIGallery : MXUIView
     {}
 
@@ -96,15 +104,6 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Ui
         public int sequenceCount;
         public int imageCount;
         public Rect imageBounds;
-        public List<object> imageSequences = new List<object>();
-    }
-
-    [DebuggerDisplay (@"thumbStates = \{Count = {thumbStates.Count}\}, trackStates = \{Count = {trackStates.Count}\}")]
-    public class MXUISlider : MXUIBase
-    {
-        public Rect trackRect;
-        public Dictionary<int, MXUIImage> thumbStates = new Dictionary<int, MXUIImage>();
-        public Dictionary<int, MXUIImage> trackStates = new Dictionary<int, MXUIImage>();
     }
 
     [DebuggerDisplay (@"zoomContent = {zoomContent}")]

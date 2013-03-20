@@ -6,6 +6,8 @@ using System.Threading;
 using Alba.Framework.Attributes;
 using Alba.Framework.IO;
 using ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Events;
+using ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Parser;
+using ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Ui;
 using ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Context;
 using System.Linq;
 using Alba.Framework.Sys;
@@ -173,17 +175,54 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
             Log();
             Log("* Downloading interface assets");
             Log();
-            /*var processedFiles = new List<string>();
-            while (true) {
-                var files = Directory.EnumerateFiles(DataBaseDir, "*.mxcsi", SearchOption.AllDirectories).Except(processedFiles).ToList();
-                if (!files.Any())
-                    break;
-                foreach (string file in files)
-                    DownloadInterfaceFileAssets(file);
-                processedFiles.AddRange(files);
-            }*/
+            var files = new HashSet<string>();
+            foreach (string uifile in Directory.EnumerateFiles(Constants.DataBaseDir, "*.mxcsi", SearchOption.AllDirectories))
+                DownloadAssets(files, MxCsiParser.parse(uifile));
+            Download(files);
             Log();
             Log("* Downloading interface assets - DONE");
+        }
+
+        private void DownloadAssets (ICollection<string> files, MXUIView view)
+        {
+            view.buttons.ForEach(o => DownloadAssets(files, o));
+            view.layers.ForEach(o => DownloadAssets(files, o));
+            view.sliders.ForEach(o => DownloadAssets(files, o));
+            view.subviews.ForEach(o => DownloadAssets(files, o));
+            var gallery = view as MXUIGallery;
+            if (gallery != null) {
+                // TODO
+            }
+            var flipbook = view as MXUIFlipbook;
+            if (flipbook != null) {
+                // TODO
+            }
+            var video = view as MXUIVideo;
+            if (video != null) {
+                // TODO
+            }
+        }
+
+        private void DownloadAssets (ICollection<string> files, MXUIButton button)
+        {
+            button.imageStates.Values.ForEach(o => DownloadAssets(files, o));
+        }
+
+        private void DownloadAssets (ICollection<string> files, MXUILayer layer)
+        {
+            DownloadAssets(files, layer.contents);
+        }
+
+        private void DownloadAssets (ICollection<string> files, MXUISlider slider)
+        {
+            slider.thumbStates.Values.ForEach(o => DownloadAssets(files, o));
+            slider.trackStates.Values.ForEach(o => DownloadAssets(files, o));
+        }
+
+        private void DownloadAssets (ICollection<string> files, MXUIImage image)
+        {
+            string dir = _context.Config.SecondScreenAssetBase;
+            files.Add(dir + image.file);
         }
 
         private void Download (IEnumerable<string> files)
