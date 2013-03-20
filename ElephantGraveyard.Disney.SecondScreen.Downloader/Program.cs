@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using Alba.Framework.Attributes;
 using Alba.Framework.IO;
+using Alba.Framework.Collections;
 using Alba.Framework.Sys;
 using ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Events;
 using ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Parser;
@@ -60,19 +61,13 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
                 DownloadEventData();
                 DownloadInterfaceAssets();
 
-                if (_failedDownloads.Any()) {
-                    Log();
-                    Log("Failed downloads:");
-                    foreach (string failedDownload in _failedDownloads)
-                        Log("  - {0}", failedDownload);
-                }
-
-                Log();
-                Log("Successfully downloaded {0} file(s)", _successfulDownloadsNum);
+                WriteDownloadStats();
                 Log();
                 Log("DONE!");
             }
             catch (Exception e) {
+                WriteDownloadStats();
+                Log();
                 Log("Oops I did it again! {0}", e);
             }
             finally {
@@ -80,6 +75,19 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
             }
+        }
+
+        private void WriteDownloadStats ()
+        {
+            if (_failedDownloads.Any()) {
+                Log();
+                Log("Failed downloads:");
+                foreach (string failedDownload in _failedDownloads)
+                    Log("  - {0}", failedDownload);
+            }
+
+            Log();
+            Log("Successfully downloaded {0} file(s)", _successfulDownloadsNum);
         }
 
         private void DownloadMainData ()
@@ -160,11 +168,6 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                // flipbook:
-                //   *_FB_*.swf (?) - FlipbookView
-                // gallery:
-                //   galleryInfoButtons:
-                //     *..._info_segment
             }
             Download(files);
             Log();
@@ -192,7 +195,13 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
             view.subviews.ForEach(o => DownloadAssets(files, file, o));
             var gallery = view as MXUIGallery;
             if (gallery != null) {
-                // TODO
+                MXUIView galleryButtonGroup = gallery.subviews.SingleOrDefault(v => v.layerInfo.name == "gallery_button_group");
+                if (galleryButtonGroup != null) { // can be null for deleted scene module
+                    string dir = _context.Config.SecondScreenAssetBase;
+                    IEnumerable<MXUIButton> galleryInfoButtons = galleryButtonGroup.buttons.Where(b => b.layerInfo.name.Contains("info"));
+                    IEnumerable<string> infoImageNames = galleryInfoButtons.Select(b => b.layerInfo.name.Split('_').Take(3).JoinString("_"));
+                    files.AddRange(infoImageNames.Select(name => dir + name + "_info_segment.mxcsi"));
+                }
             }
             var flipbook = view as MXUIFlipbook;
             if (flipbook != null) {
@@ -202,7 +211,7 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
             }
             var video = view as MXUIVideo;
             if (video != null) {
-                // TODO
+                throw new NotSupportedException(); // There's none...
             }
         }
 
