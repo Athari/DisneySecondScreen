@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Alba.Framework.Attributes;
 using Alba.Framework.IO;
@@ -177,25 +178,27 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
             Log();
             var files = new HashSet<string>();
             foreach (string uifile in Directory.EnumerateFiles(Constants.DataBaseDir, "*.mxcsi", SearchOption.AllDirectories))
-                DownloadAssets(files, MxCsiParser.parse(uifile));
+                DownloadAssets(files, Path.GetFileNameWithoutExtension(uifile), MxCsiParser.parse(uifile));
             Download(files);
             Log();
             Log("* Downloading interface assets - DONE");
         }
 
-        private void DownloadAssets (ICollection<string> files, MXUIView view)
+        private void DownloadAssets (ICollection<string> files, string file, MXUIView view)
         {
-            view.buttons.ForEach(o => DownloadAssets(files, o));
-            view.layers.ForEach(o => DownloadAssets(files, o));
-            view.sliders.ForEach(o => DownloadAssets(files, o));
-            view.subviews.ForEach(o => DownloadAssets(files, o));
+            view.buttons.ForEach(o => DownloadAssets(files, file, o));
+            view.layers.ForEach(o => DownloadAssets(files, file, o));
+            view.sliders.ForEach(o => DownloadAssets(files, file, o));
+            view.subviews.ForEach(o => DownloadAssets(files, file, o));
             var gallery = view as MXUIGallery;
             if (gallery != null) {
                 // TODO
             }
             var flipbook = view as MXUIFlipbook;
             if (flipbook != null) {
-                // TODO
+                string eventId = new Regex(@"^(IS_\d+)_flipbook$").Match(file).Groups[1].Value;
+                for (int i = 0; i < flipbook.sequenceCount; i++)
+                    files.Add(_context.Config.FlipbookBase + eventId + "_FB_" + i + ".swf");
             }
             var video = view as MXUIVideo;
             if (video != null) {
@@ -203,23 +206,23 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
             }
         }
 
-        private void DownloadAssets (ICollection<string> files, MXUIButton button)
+        private void DownloadAssets (ICollection<string> files, string file, MXUIButton button)
         {
-            button.imageStates.Values.ForEach(o => DownloadAssets(files, o));
+            button.imageStates.Values.ForEach(o => DownloadAssets(files, file, o));
         }
 
-        private void DownloadAssets (ICollection<string> files, MXUILayer layer)
+        private void DownloadAssets (ICollection<string> files, string file, MXUILayer layer)
         {
-            DownloadAssets(files, layer.contents);
+            DownloadAssets(files, file, layer.contents);
         }
 
-        private void DownloadAssets (ICollection<string> files, MXUISlider slider)
+        private void DownloadAssets (ICollection<string> files, string file, MXUISlider slider)
         {
-            slider.thumbStates.Values.ForEach(o => DownloadAssets(files, o));
-            slider.trackStates.Values.ForEach(o => DownloadAssets(files, o));
+            slider.thumbStates.Values.ForEach(o => DownloadAssets(files, file, o));
+            slider.trackStates.Values.ForEach(o => DownloadAssets(files, file, o));
         }
 
-        private void DownloadAssets (ICollection<string> files, MXUIImage image)
+        private void DownloadAssets (ICollection<string> files, string file, MXUIImage image)
         {
             string dir = _context.Config.SecondScreenAssetBase;
             files.Add(dir + image.file);
