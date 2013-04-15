@@ -6,8 +6,8 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Alba.Framework.Attributes;
-using Alba.Framework.IO;
 using Alba.Framework.Collections;
+using Alba.Framework.IO;
 using Alba.Framework.Sys;
 using ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Events;
 using ElephantGraveyard.Disney.SecondScreen.Downloader.Library.Parser;
@@ -49,12 +49,19 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
                     case "TheLionKing":
                         _context = new MainContext_TheLionKing();
                         break;
+                    case "LadyAndTheTramp":
+                        _context = new MainContext_LadyAndTheTramp();
+                        break;
+                    case "Bambi":
+                        _context = new MainContext_Bambi();
+                        break;
                     default:
                         throw new InvalidOperationException("Unsupported context type.");
                 }
 
                 Log(new string('=', 80));
                 Log("Started on {0}", DateTime.Now);
+                Log("Downloading {0}", contextType);
                 Log(new string('=', 80));
 
                 DownloadMainData();
@@ -180,7 +187,7 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
             Log("* Downloading interface assets");
             Log();
             var files = new HashSet<string>();
-            foreach (string uifile in Directory.EnumerateFiles(Constants.DataBaseDir, "*.mxcsi", SearchOption.AllDirectories))
+            foreach (string uifile in Directory.EnumerateFiles(_context.Config.DataBaseDir, "*.mxcsi", SearchOption.AllDirectories))
                 DownloadAssets(files, Path.GetFileNameWithoutExtension(uifile), MxCsiParser.parse(uifile));
             Download(files);
             Log();
@@ -249,7 +256,7 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
         private void Download (string file)
         {
             string url = _context.Config.ApplicationUrl + file;
-            string path = Constants.DataBaseDir + file;
+            string path = _context.Config.DataBaseDir + file;
 
             if (File.Exists(path)) {
                 Log("  Skipping {0}", file);

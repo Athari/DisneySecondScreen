@@ -18,7 +18,7 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Context
 
         protected MainContext ()
         {
-            _eventListConfig = new Lazy<PlistConfig>(() => (PlistConfig)Plist.ReadFile(Constants.DataBaseDir + EventListConfigFile));
+            _eventListConfig = new Lazy<PlistConfig>(() => (PlistConfig)Plist.ReadFile(Config.DataBaseDir + EventListConfigFile));
         }
 
         //

@@ -1,9 +1,12 @@
-﻿using System;
-
-namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Config
+﻿namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Config
 {
     internal class Config_TheLionKing : ConfigBase
     {
+        public override string FlashName
+        {
+            get { return "Cub"; }
+        }
+
         public override string AppId
         {
             get { return "The_Lion_King"; }

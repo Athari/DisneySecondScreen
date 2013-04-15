@@ -4,9 +4,16 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader.Shell.Config
 {
     internal abstract class ConfigBase
     {
+        public abstract string FlashName { get; }
+
         public abstract string AppId { get; }
 
         public abstract string AppName { get; }
+
+        public virtual string DataBaseDir
+        {
+            get { return "data-" + FlashName + "/"; }
+        }
 
         public virtual string ApplicationUrl
         {
