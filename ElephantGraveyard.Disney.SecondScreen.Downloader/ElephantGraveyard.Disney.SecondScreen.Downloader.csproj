@@ -58,6 +58,8 @@
     <Compile Include="Shell\Config\Config_Bambi.cs" />
     <Compile Include="Shell\Config\Config_Cinderella.cs" />
     <Compile Include="Shell\Config\Config_Pirates4.cs" />
+    <Compile Include="Shell\Config\Config_JohnCarter.cs" />
+    <Compile Include="Shell\Context\MainContext_JohnCarter.cs" />
     <Compile Include="Shell\Context\MainContext_Pirates4.cs" />
     <Compile Include="Shell\Context\MainContext_Cinderella.cs" />
     <Compile Include="Shell\Context\MainContext_Bambi.cs" />

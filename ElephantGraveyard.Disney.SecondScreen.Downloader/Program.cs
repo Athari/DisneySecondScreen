@@ -61,6 +61,9 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
                     case "Pirates4":
                         _context = new MainContext_Pirates4();
                         break;
+                    case "JohnCarter":
+                        _context = new MainContext_JohnCarter();
+                        break;
                     default:
                         throw new InvalidOperationException("Unsupported context type.");
                 }
@@ -224,7 +227,7 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
             }
             var video = view as MXUIVideo;
             if (video != null) {
-                throw new NotSupportedException(); // There's none...
+                files.Add(_context.Config.VideoBase + video.filename);
             }
         }
 
