@@ -55,6 +55,12 @@ namespace ElephantGraveyard.Disney.SecondScreen.Downloader
                     case "Bambi":
                         _context = new MainContext_Bambi();
                         break;
+                    case "Cinderella":
+                        _context = new MainContext_Cinderella();
+                        break;
+                    case "Pirates4":
+                        _context = new MainContext_Pirates4();
+                        break;
                     default:
                         throw new InvalidOperationException("Unsupported context type.");
                 }
